@@ -14,4 +14,5 @@ class TranslateController extends AbstractController
 
         parent::redirect($previousRoute);
     }
+    
 }
