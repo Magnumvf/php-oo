@@ -25,7 +25,37 @@ class Curso
     #[Column(type: 'boolean')]
     public bool $status;
 
+    #[Column]
+    public string $types;
 
+    #[Column(type: 'integer')]
+    public int $workload;
+
+    public function setDetails()
+    {
+        if ($this->types === 'formacao') {
+            $this->workload = 192;
+        } else if ($this->types === 'curta_duracao') {
+            $this->workload = 16;
+        } else if ($this->types === 'media_duracao') {
+            $this->workload = 44;
+        } else if ($this->types === 'avancada') {
+            $this->workload = 96;
+        } else if ($this->types === 'intensivo') {
+            $this->workload = 72;
+        }
+    }
+
+    public function getTypes(): array
+    {
+        return [
+            'formacao' => 'Formação',
+            'curta_duracao' => 'Curta Duração',
+            'media_duracao' => 'Média Duração',
+            'avancada' => 'Avançada',
+            'intensivo' => 'Intensivo',
+        ];
+    }
 
     // public function __construct(string $name) {
     //     $this->name = $name;

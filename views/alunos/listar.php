@@ -1,3 +1,7 @@
+<div class="col">
+    <a href="/alunos/adicionar" class="btn btn-success"><?= translate('student-new') ?></a>
+</div>
+<hr>
 <table class="table table-hover table-striped">
     <thead class="table-dark">
         <tr>
@@ -6,7 +10,7 @@
             <th><?=translate('student-cpf')?></th>
             <th><?=translate('student-email')?></th>
             <th><?=translate('student-created_at')?></th>
-            <th><?=translate('actions')?></th>
+            <th><?=translate('table-actions')?></th>
         </tr>
     </thead>
     <tbody>
@@ -23,8 +27,8 @@
                         <td>{$aluno->email}</td>
                         <td>{$aluno->created_at->format('d/m/Y')}</td>
                         <td>
-                            <a href='' class='btn btn-warning btn-sm'>{$buttonEdit}</a>
-                            <a href='' class='btn btn-danger btn-sm'>{$buttonDelete}</a>
+                            <a href='/alunos/editar?id={$aluno->id}' class='btn btn-warning btn-sm'>{$buttonEdit}</a>
+                            <a href='/alunos/excluir?id={$aluno->id}' class='btn btn-danger btn-sm'>{$buttonDelete}</a>
                         </td>
                     </tr>
                 ";

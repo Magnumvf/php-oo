@@ -11,7 +11,21 @@ return [
     'button-delete' => 'Excluir',
     'page-title' => 'Inicio',
     'text-confirm' => 'Pronto',
+    'text-save' => 'Salvar',
     'input-type-here' => 'Digite aqui',
     'new-course' => 'Novo Curso',
+    'active'=>'Ativo',
+    'inactive'=>'Inativo',
+    'course-description' => 'Descrição',
+    'status' => "Status",
+    'student-name' => 'Nome',
+    'student-registry' => 'Matrícula',
+    'student-cpf' => 'CPF',
+    'student-email' => 'E-mail',
+    'student-created_at' => 'Data da Matrícula',
+    'student-new' => 'Novo Aluno',
+    'student-edit' => 'Editar Aluno',
+    'course-types' => 'Modalidade',
+    'course-workload' => 'Carga Horária'
 ];
 

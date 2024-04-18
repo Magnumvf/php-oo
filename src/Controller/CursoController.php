@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Curso;
+use App\Repository\CursoRepository;
+use App\UseCase\SendStudentNotificationAboutNewCourse;
 use App\Validator\CursoValidator;
 
 final class CursoController extends AbstractController
 {
     public CursoValidator $validator;
-    public mixed $entityManager;
+
+    public CursoRepository $cursoRepository;
 
     public function __construct()
     {
         $this->validator = new CursoValidator();
-        $this->entityManager = parent::entityManager();
+        $this->cursoRepository = new CursoRepository();
     }
 
     public function listar(): void
     {
-
-        $repository = $this->entityManager->getRepository(Curso::class);
-
         parent::render('curso/listar', [
-            'cursos' => $repository->findAll(),
+            'cursos' => $this->cursoRepository->findAll(),
         ]);
     }
 
@@ -37,7 +37,7 @@ final class CursoController extends AbstractController
 
         $errors = $this->validator->validateRequest();
 
-        if (false === empty($errors)) {    
+        if (false === empty($errors)) {
             $_SESSION['errors'] = $errors;
 
             parent::render('curso/add');
@@ -48,30 +48,55 @@ final class CursoController extends AbstractController
         $curso->name = $_POST['name'];
         $curso->description = $_POST['description'];
         $curso->status = (bool) $_POST['status'];
+        $curso->types = $_POST['types'];
 
+        // Foi um tentativa em vao
+        $curso->setDetails();
 
-        //INSERT INTO
-        $this->entityManager->persist($curso);
-        $this->entityManager->flush();
+        $this->cursoRepository->save($curso);
 
-        header('location: /cursos/listar');
+        /**
+         * Dispara notificação para os alunos
+         */
+        (new SendStudentNotificationAboutNewCourse($curso))->notify();
+
+        parent::redirect("/cursos/listar");
     }
 
     public function editar(): void
     {
-        echo "Editar";
+        $id = (int)$_GET['id'];
+        $curso = $this->cursoRepository->find($id);
+
+        if (true === empty($_POST)) {
+            parent::render('curso/editar', [
+                'curso' => $curso,
+            ]);
+            return;
+        }
+
+        $curso->name = $_POST['name'];
+        $curso->description = $_POST['description'];
+        $curso->status = boolval($_POST['status']);
+        $curso->types = $_POST['types'];
+
+        // Foi um tentativa em vao
+        $curso->setDetails();
+
+        $this->cursoRepository->save($curso);
+
+        parent::redirect('/cursos/listar');
     }
 
     public function excluir(): void
     {
-        $id = $_GET['id'];
-        $curso = $this->entityManager->find(Curso::class, $id);
+        $id = (int)$_GET['id'];
+        $curso = $this->cursoRepository->find($id);
 
-        if($curso !== null) {
-            $this->entityManager->remove($curso);
-            $this->entityManager->flush();
+        if ($curso !== null) {
+            $this->cursoRepository->remove($curso);
         }
 
-        header('location: /cursos/listar');
+        parent::redirect("/cursos/listar");
     }
 }
